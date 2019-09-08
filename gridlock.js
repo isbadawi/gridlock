@@ -115,13 +115,44 @@ class Level {
   }
 }
 
-let level = Level.parse([
-  'WWEEEB',
-  '..F..B',
-  'RRF..D',
-  '..F..D',
-  'XYY.Z.',
-  'X...Z.',
-].join('\n'))
+function startGame() {
+  let canvas = document.getElementById('grid');
+  if (!canvas.getContext) {
+    return;
+  }
 
-console.log(level);
+  let level = Level.parse([
+    'WWEEEB',
+    '..F..B',
+    'RRF..D',
+    '..F..D',
+    'XYY.Z.',
+    'X...Z.',
+  ].join('\n'))
+
+  let colors = [
+    'green',
+    'blue',
+    'cyan',
+    'yellow',
+    'magenta',
+    'pink',
+    'orange',
+    'brown',
+  ];
+  let nextColor = 0;
+
+  let ctx = canvas.getContext('2d');
+
+  for (let piece of level.pieces) {
+    let x = piece.x * 100;
+    let y = piece.y * 100;
+    let width = piece.orientation == VERTICAL ? 100 : piece.size * 100;
+    let height = piece.orientation == HORIZONTAL ? 100 : piece.size * 100;
+
+    ctx.fillStyle = piece.main ? 'red' : colors[nextColor++];
+    ctx.strokeStyle = 'black';
+    ctx.fillRect(x, y, width, height);
+    ctx.strokeRect(x, y, width, height);
+  }
+}
