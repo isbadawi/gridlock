@@ -177,9 +177,15 @@ class Game {
     }
   }
 
+  toCanvasCoordinates(e) {
+    let rect = this.canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
   onMouseDown(e) {
-    let x = Math.floor(e.clientX / CELL_SIZE);
-    let y = Math.floor(e.clientY / CELL_SIZE);
+    let pos = this.toCanvasCoordinates(e);
+    let x = Math.floor(pos.x / CELL_SIZE);
+    let y = Math.floor(pos.y / CELL_SIZE);
     this.selectedPiece = this.level.pieceAt(x, y);
   }
 
@@ -192,11 +198,13 @@ class Game {
       return;
     }
 
+    let pos = this.toCanvasCoordinates(e);
+
     let fromX = this.selectedPiece.x;
     let fromY = this.selectedPiece.y;
 
-    let toX = Math.floor(e.clientX / CELL_SIZE);
-    let toY = Math.floor(e.clientY / CELL_SIZE);
+    let toX = Math.floor(pos.x / CELL_SIZE);
+    let toY = Math.floor(pos.y / CELL_SIZE);
 
     try {
       this.level.move(fromX, fromY, toX, toY);
