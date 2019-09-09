@@ -124,15 +124,21 @@ class Level {
       if (y != toY) {
         throw Error('stay in same lane horizontal');
       }
-      for (let i = 0; i < Math.abs(toX - x); ++i) {
-        this.moveByOne(x, y, toX >= x ? 1 : -1);
+      for (let i = 0; i < x - toX; ++i) {
+        this.moveByOne(x, y, -1);
+      }
+      for (let i = 0; i < toX - (x + piece.size - 1); ++i) {
+        this.moveByOne(x, y, 1);
       }
     } else if (piece.orientation == VERTICAL) {
       if (x != toX) {
         throw Error('stay in same lane vertical');
       }
-      for (let i = 0; i < Math.abs(toY - y); ++i) {
-        this.moveByOne(x, y, toY >= y ? 1 : -1);
+      for (let i = 0; i < y - toY; ++i) {
+        this.moveByOne(x, y, -1);
+      }
+      for (let i = 0; i < toY - (y + piece.size - 1); ++i) {
+        this.moveByOne(x, y, 1);
       }
     }
   }
