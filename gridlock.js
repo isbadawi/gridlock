@@ -172,6 +172,10 @@ class Game {
 
       ctx.fillStyle = piece.main ? 'red' : colors[nextColor++];
       ctx.strokeStyle = 'black';
+      ctx.lineWidth = 1;
+      if (piece == this.selectedPiece) {
+        ctx.lineWidth = 5;
+      }
       ctx.fillRect(x, y, width, height);
       ctx.strokeRect(x, y, width, height);
     }
@@ -187,10 +191,12 @@ class Game {
     let x = Math.floor(pos.x / CELL_SIZE);
     let y = Math.floor(pos.y / CELL_SIZE);
     this.selectedPiece = this.level.pieceAt(x, y);
+    this.draw();
   }
 
   onMouseUp(e) {
     this.selectedPiece = null;
+    this.draw();
   }
 
   onMouseMove(e) {
