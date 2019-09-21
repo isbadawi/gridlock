@@ -1,4 +1,4 @@
-import { LEVEL } from "./levels.js";
+import { LEVELS } from "./levels.js";
 
 const HORIZONTAL = Symbol.for('horizontal');
 const VERTICAL = Symbol.for('vertical');
@@ -23,19 +23,19 @@ class Level {
   // {
   //   n: 6,
   //   pieces: [
-  //     {x: 0, y: 0, orientation: HORIZONTAL, size: 2}, // W
-  //     {x: 2, y: 0, orientation: HORIZONTAL, size: 3}, // E
-  //     {x: 5, y: 0, orientation: VERTICAL, size: 2}, // B
-  //     {x: 2, y: 1, orientation: VERTICAL, size: 3}, // F
-  //     {x: 0, y: 2, orientation: HORIZONTAL, size: 2, main: true }, R
-  //     {x: 5, y: 2, orientation: VERTICAL, size: 2}, // D
-  //     {x: 0, y: 4, orientation: VERTICAL, size: 2}, // X
-  //     {x: 1, y: 4, orientation: HORIZONTAL, size: 2}, // Y
-  //     {x: 4, y: 4, orientation: VERTICAL, size: 2}, // Z
+  //     {name: 'W', x: 0, y: 0, orientation: HORIZONTAL, size: 2},
+  //     {name: 'E', x: 2, y: 0, orientation: HORIZONTAL, size: 3},
+  //     {name: 'B', x: 5, y: 0, orientation: VERTICAL, size: 2},
+  //     {name: 'F', x: 2, y: 1, orientation: VERTICAL, size: 3},
+  //     {name: 'R', x: 0, y: 2, orientation: HORIZONTAL, size: 2},
+  //     {name: 'D', x: 5, y: 2, orientation: VERTICAL, size: 2},
+  //     {name: 'X', x: 0, y: 4, orientation: VERTICAL, size: 2},
+  //     {name: 'Y', x: 1, y: 4, orientation: HORIZONTAL, size: 2},
+  //     {name: 'Z', x: 4, y: 4, orientation: VERTICAL, size: 2},
   //   ]
   // }
   //
-  // For now only supports square grids.
+  // 'R' is assumed to be the main piece. For now only supports square grids.
   static parse(description) {
     let seen = {};
     let rows = description.trim().split('\n');
@@ -50,7 +50,13 @@ class Level {
         }
 
         if (!(cell in seen)) {
-          seen[cell] = {x: colIndex, y: rowIndex, orientation: HORIZONTAL, size: 1};
+          seen[cell] = {
+            name: cell,
+            x: colIndex,
+            y: rowIndex,
+            orientation: HORIZONTAL,
+            size: 1
+          };
         } else {
           seen[cell].size++;
           if (rowIndex == seen[cell].y) {
@@ -67,7 +73,6 @@ class Level {
     if (!('R' in seen)) {
       throw Error('did not find main piece R');
     }
-    seen.R.main = true;
 
     return new Level(n, Object.values(seen));
   }
@@ -157,17 +162,16 @@ class Game {
   }
 
   draw() {
-    let colors = [
-      'green',
-      'blue',
-      'cyan',
-      'yellow',
-      'magenta',
-      'pink',
-      'orange',
-      'brown',
-    ];
-    let nextColor = 0;
+    let colors = {
+      'G': 'green',
+      'Y': 'yellow',
+      'P': 'purple',
+      'R': 'red',
+      'B': 'blue',
+      'O': 'orange',
+      'C': 'cyan',
+      'T': 'teal'
+    };
 
     let ctx = this.canvas.getContext('2d');
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -178,7 +182,11 @@ class Game {
       let width = piece.orientation == VERTICAL ? CELL_SIZE : piece.size * CELL_SIZE;
       let height = piece.orientation == HORIZONTAL ? CELL_SIZE : piece.size * CELL_SIZE;
 
-      ctx.fillStyle = piece.main ? 'red' : colors[nextColor++];
+      if (!(piece.name in colors)) {
+        throw Error('unsupported color: ' + piece.name);
+      }
+
+      ctx.fillStyle = colors[piece.name];
       ctx.strokeStyle = 'black';
       ctx.lineWidth = 1;
       if (piece == this.selectedPiece) {
@@ -234,7 +242,7 @@ class Game {
     return;
   }
 
-  let level = Level.parse(LEVEL);
+  let level = Level.parse(LEVELS[0]);
 
   let game = new Game(canvas, level);
 

@@ -1,8 +1,10 @@
-export let LEVEL = [
-  'WWEEEB',
-  '..F..B',
-  'RRF..D',
-  '..F..D',
-  'XYY.Z.',
-  'X...Z.',
-].join('\n');
+export let LEVELS = [
+  [
+    'GG...Y',
+    'P..B.Y',
+    'PRRB.Y',
+    'P..B..',
+    'O...CC',
+    'O.TTT.',
+  ].join('\n'),
+];
