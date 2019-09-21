@@ -163,14 +163,22 @@ class Game {
 
   draw() {
     let colors = {
-      'G': 'green',
-      'Y': 'yellow',
-      'P': 'purple',
+      'G': 'seagreen',
+      'g': 'lightgreen',
+      'Y': 'gold',
+      'y': 'khaki',
+      'M': 'rebeccapurple',
+      'm': 'mediumpurple',
+      'P': 'palevioletred',
+      'B': 'dimgrey',
+      'b': 'sienna',
       'R': 'red',
-      'B': 'blue',
+      'r': 'tan',
+      'N': 'royalblue',
       'O': 'orange',
-      'C': 'cyan',
-      'T': 'teal'
+      'o': 'darkolivegreen',
+      'C': 'deepskyblue',
+      'T': 'teal',
     };
 
     let ctx = this.canvas.getContext('2d');
@@ -242,7 +250,7 @@ class Game {
     return;
   }
 
-  let level = Level.parse(LEVELS[0]);
+  let level = Level.parse(LEVELS[LEVELS.length - 1]);
 
   let game = new Game(canvas, level);
 
