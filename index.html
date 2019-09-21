@@ -6,6 +6,29 @@
     <script src="gridlock.js" type="module"></script>
     <style type="text/css">
       canvas { border: 1px solid black; }
+
+      div#levels {
+        width: 900px;
+        float: right;
+      }
+
+      div.level {
+        float: left;
+        border: solid;
+        border-width: 1px;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        text-align: center;
+      }
+
+      div.solved {
+        background-color: lightgreen;
+      }
+
+      div.unsolved {
+        background-color: salmon;
+      }
     </style>
   </head>
   <body>
@@ -15,5 +38,8 @@
     <canvas id="grid" width="600" height="600">
       Sorry, your browser doesn't support the canvas element.
     </canvas>
+    <div id="levels">
+      <p>Levels</p>
+    </div>
   </body>
 </html>

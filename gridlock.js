@@ -259,4 +259,21 @@ class Game {
   canvas.addEventListener('mousedown', game.onMouseDown.bind(game), false);
   canvas.addEventListener('mouseup', game.onMouseUp.bind(game), false);
   canvas.addEventListener('mousemove', game.onMouseMove.bind(game), false);
+
+  let progress = window.localStorage.getItem('progress');
+  if (progress) {
+    progress = JSON.parse(progress);
+  } else {
+    progress = [];
+    for (let _ of LEVELS) {
+      progress.push(false);
+    }
+  }
+
+  let progressUI = '';
+  for (let i = 0; i < LEVELS.length; ++i) {
+    let clazz = progress[i] ? 'level solved' : 'level unsolved';
+    progressUI += '<a href="?level=' + (i + 1) + '"><div class="' + clazz + '">' + (i + 1) + '</div>';
+  }
+  document.getElementById('levels').innerHTML += progressUI;
 })();
