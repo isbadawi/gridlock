@@ -250,8 +250,9 @@ class Game {
     return;
   }
 
-  let level = Level.parse(LEVELS[LEVELS.length - 1]);
-
+  const params = new URLSearchParams(window.location.search);
+  let which = params.get('level') || '1';
+  let level = Level.parse(LEVELS[parseInt(which) - 1]);
   let game = new Game(canvas, level);
 
   game.draw();
