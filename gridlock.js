@@ -306,8 +306,8 @@ class Game {
   });
 
   game.draw();
-  canvas.addEventListener('mousedown', game.onMouseDown.bind(game), false);
-  canvas.addEventListener('mouseup', game.onMouseUp.bind(game), false);
-  canvas.addEventListener('mousemove', game.onMouseMove.bind(game), false);
+  canvas.addEventListener('pointerdown', game.onMouseDown.bind(game), false);
+  canvas.addEventListener('pointerup', game.onMouseUp.bind(game), false);
+  canvas.addEventListener('pointermove', game.onMouseMove.bind(game), false);
 
 })();
