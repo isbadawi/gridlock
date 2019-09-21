@@ -1,3 +1,5 @@
+import { LEVEL } from "./levels.js";
+
 const HORIZONTAL = Symbol.for('horizontal');
 const VERTICAL = Symbol.for('vertical');
 
@@ -226,25 +228,18 @@ class Game {
   }
 }
 
-function startGame() {
+(function startGame() {
   let canvas = document.getElementById('grid');
   if (!canvas.getContext) {
     return;
   }
 
-  let level = Level.parse([
-    'WWEEEB',
-    '..F..B',
-    'RRF..D',
-    '..F..D',
-    'XYY.Z.',
-    'X...Z.',
-  ].join('\n'))
+  let level = Level.parse(LEVEL);
 
   let game = new Game(canvas, level);
 
-  game.draw(canvas);
+  game.draw();
   canvas.addEventListener('mousedown', game.onMouseDown.bind(game), false);
   canvas.addEventListener('mouseup', game.onMouseUp.bind(game), false);
   canvas.addEventListener('mousemove', game.onMouseMove.bind(game), false);
-}
+})();
