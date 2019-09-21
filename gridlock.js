@@ -154,9 +154,11 @@ class Level {
 const CELL_SIZE = 100;
 
 class Game {
-  constructor(canvas, level) {
+  constructor(canvas, level, callback) {
     this.canvas = canvas;
     this.level = level;
+    this.callback = callback;
+    this.solved = false;
 
     this.onMouseUp();
   }
@@ -203,6 +205,13 @@ class Game {
       ctx.fillRect(x, y, width, height);
       ctx.strokeRect(x, y, width, height);
     }
+
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'black';
+    ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
+
+    ctx.strokeStyle = 'white';
+    ctx.strokeRect(this.canvas.width, 2 * CELL_SIZE, 0, CELL_SIZE);
   }
 
   toCanvasCoordinates(e) {
@@ -211,6 +220,10 @@ class Game {
   }
 
   onMouseDown(e) {
+    if (this.solved) {
+      return;
+    }
+
     let pos = this.toCanvasCoordinates(e);
     let x = Math.floor(pos.x / CELL_SIZE);
     let y = Math.floor(pos.y / CELL_SIZE);
@@ -219,11 +232,19 @@ class Game {
   }
 
   onMouseUp(e) {
+    if (this.solved) {
+      return;
+    }
+
     this.selectedPiece = null;
     this.draw();
   }
 
   onMouseMove(e) {
+    if (this.solved) {
+      return;
+    }
+
     if (this.selectedPiece == null) {
       return;
     }
@@ -241,6 +262,12 @@ class Game {
       this.draw();
     } catch (e) {
     }
+
+    if (this.selectedPiece.name == 'R' &&
+        this.selectedPiece.x == this.level.n - this.selectedPiece.size) {
+      this.solved = true;
+      this.callback();
+    }
   }
 }
 
@@ -249,16 +276,6 @@ class Game {
   if (!canvas.getContext) {
     return;
   }
-
-  const params = new URLSearchParams(window.location.search);
-  let which = params.get('level') || '1';
-  let level = Level.parse(LEVELS[parseInt(which) - 1]);
-  let game = new Game(canvas, level);
-
-  game.draw();
-  canvas.addEventListener('mousedown', game.onMouseDown.bind(game), false);
-  canvas.addEventListener('mouseup', game.onMouseUp.bind(game), false);
-  canvas.addEventListener('mousemove', game.onMouseMove.bind(game), false);
 
   let progress = window.localStorage.getItem('progress');
   if (progress) {
@@ -270,10 +287,27 @@ class Game {
     }
   }
 
+  const params = new URLSearchParams(window.location.search);
+  let which = parseInt(params.get('level') || '1') - 1;
+  document.getElementById('current').innerHTML += (which + 1);
+
   let progressUI = '';
   for (let i = 0; i < LEVELS.length; ++i) {
     let clazz = progress[i] ? 'level solved' : 'level unsolved';
-    progressUI += '<a href="?level=' + (i + 1) + '"><div class="' + clazz + '">' + (i + 1) + '</div>';
+    progressUI += '<a href="?level=' + (i + 1) + '"><div id="level' + (i + 1) + '" class="' + clazz + '">' + (i + 1) + '</div>';
   }
   document.getElementById('levels').innerHTML += progressUI;
+
+  let level = Level.parse(LEVELS[which]);
+  let game = new Game(canvas, level, function() {
+    document.getElementById('level' + (which + 1)).className = 'level solved';
+    progress[which] = true;
+    window.localStorage.setItem('progress', JSON.stringify(progress));
+  });
+
+  game.draw();
+  canvas.addEventListener('mousedown', game.onMouseDown.bind(game), false);
+  canvas.addEventListener('mouseup', game.onMouseUp.bind(game), false);
+  canvas.addEventListener('mousemove', game.onMouseMove.bind(game), false);
+
 })();

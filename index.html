@@ -5,8 +5,6 @@
     <title>Gridlock</title>
     <script src="gridlock.js" type="module"></script>
     <style type="text/css">
-      canvas { border: 1px solid black; }
-
       div#levels {
         width: 900px;
         float: right;
@@ -33,13 +31,16 @@
   </head>
   <body>
     <p>Your goal is to get the red block to the right side of the grid.
-       You may click and drag blocks to move them, but horizontal blocks can only go left or right,
-       and vertical blocks can only go up or down. Good luck!</p>
+       You may click and drag blocks to move them, but horizontal blocks can
+       only go left or right, and vertical blocks can only go up or down.
+       You can always refresh the page to reset the grid to its original state.
+       Good luck!
+    </p>
     <canvas id="grid" width="600" height="600">
       Sorry, your browser doesn't support the canvas element.
     </canvas>
     <div id="levels">
-      <p>Levels</p>
+      <h3 id="current">Level </h3>
     </div>
   </body>
 </html>
